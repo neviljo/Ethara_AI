@@ -1,7 +1,7 @@
 from sqlalchemy import orm
-from sqlalchemy.exc import IntegrityError
 
 from app.models.customer import Customer
+from app.models.order import Order
 from app.schemas.customer import CustomerCreate
 
 
@@ -29,9 +29,8 @@ class CustomerService:
         customer = self.get_by_id(customer_id)
         if not customer:
             raise LookupError(f"Customer with id {customer_id} not found")
-        self.db.delete(customer)
-        try:
-            self.db.commit()
-        except IntegrityError:
-            self.db.rollback()
+        has_orders = self.db.query(Order).filter(Order.customer_id == customer_id).first()
+        if has_orders:
             raise ValueError("Cannot delete customer: they have existing orders")
+        self.db.delete(customer)
+        self.db.commit()

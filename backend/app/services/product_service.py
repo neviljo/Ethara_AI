@@ -1,6 +1,6 @@
 from sqlalchemy import orm
-from sqlalchemy.exc import IntegrityError
 
+from app.models.order import OrderItem
 from app.models.product import Product
 from app.schemas.product import ProductCreate, ProductUpdate
 
@@ -44,9 +44,8 @@ class ProductService:
         product = self.get_by_id(product_id)
         if not product:
             raise LookupError(f"Product with id {product_id} not found")
-        self.db.delete(product)
-        try:
-            self.db.commit()
-        except IntegrityError:
-            self.db.rollback()
+        has_orders = self.db.query(OrderItem).filter(OrderItem.product_id == product_id).first()
+        if has_orders:
             raise ValueError("Cannot delete product: it is referenced in existing orders")
+        self.db.delete(product)
+        self.db.commit()

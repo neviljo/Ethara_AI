@@ -1,5 +1,4 @@
 from sqlalchemy import orm
-from sqlalchemy.exc import IntegrityError
 
 from app.models.customer import Customer
 from app.models.order import Order, OrderItem
@@ -64,8 +63,4 @@ class OrderService:
                 product.quantity_in_stock += item.quantity
 
         self.db.delete(order)
-        try:
-            self.db.commit()
-        except IntegrityError:
-            self.db.rollback()
-            raise ValueError("Cannot delete order")
+        self.db.commit()
