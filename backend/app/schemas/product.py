@@ -18,7 +18,7 @@ class ProductUpdate(BaseModel):
 
 
 class ProductResponse(BaseModel):
-    id: str
+    id: int
     name: str
     sku: str
     price: float

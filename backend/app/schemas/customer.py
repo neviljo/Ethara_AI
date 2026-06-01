@@ -10,7 +10,7 @@ class CustomerCreate(BaseModel):
 
 
 class CustomerResponse(BaseModel):
-    id: str
+    id: int
     full_name: str
     email: str
     phone: str

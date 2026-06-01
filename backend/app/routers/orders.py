@@ -8,7 +8,7 @@ from app.services.order_service import OrderService
 
 def _order_to_response(order) -> OrderResponse:
     return OrderResponse(
-        id=order.public_id,
+        id=order.id,
         customer_id=order.customer_id,
         customer_name=order.customer.full_name,
         total_amount=float(order.total_amount),
