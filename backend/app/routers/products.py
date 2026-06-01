@@ -51,5 +51,5 @@ def delete_product(product_id: int, db: orm.Session = Depends(get_db)):
         service.delete(product_id)
     except LookupError as e:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e))
-    except Exception as e:
-        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Cannot delete product: it is referenced in existing orders")
+    except ValueError as e:
+        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail=str(e))
