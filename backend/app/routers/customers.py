@@ -39,3 +39,5 @@ def delete_customer(customer_id: int, db: orm.Session = Depends(get_db)):
         service.delete(customer_id)
     except LookupError as e:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e))
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Cannot delete customer: they have existing orders")
